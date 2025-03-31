@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monte Carlo π - Rainy Forest 🌧️</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+        body {
+            font-family: 'VT323', monospace;
+            background: linear-gradient(to bottom, #0a0f1a, #1c2938);
+            color: #a0c4ff;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        canvas {
+            border: 2px solid #a0c4ff;
+            display: block;
+            margin: auto;
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0px 0px 20px rgba(160, 196, 255, 0.4);
+        }
+
+        #pi-value {
+            font-size: 24px;
+            margin-top: 10px;
+            text-shadow: 0 0 5px #a0c4ff, 0 0 10px #6272a4;
+        }
+
+        /* Pixelated rain effect */
+        .rain {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .rain span {
+            position: absolute;
+            width: 2px; /* Pixel-like thin raindrops */
+            height: 20px; /* Length of each raindrop */
+            background: rgba(160, 196, 255, 0.7); /* Light blue color */
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            from {
+                transform: translateY(-100px);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        
+
+    </style>
+</head>
+<body>
+    <div class="rain"></div>
+    <div class="trees"></div>
+    <h1> Monte Carlo π Simulation in the Rain 🌧️</h1>
+    <canvas id="canvas" width="600" height="600"></canvas>
+    <p id="pi-value">Estimated Pi: 0</p>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const radius = 300;
+        let insideCircle = 0;
+        let totalPoints = 0;
+
+        // Function to draw rain
+        function createRain() {
+            const rainContainer = document.querySelector('.rain');
+            const rainCount = 100; // Number of raindrops
+            for (let i = 0; i < rainCount; i++) {
+                const raindrop = document.createElement('span');
+                const x = Math.random() * 100; // Random horizontal position
+                const delay = Math.random() * 2; // Random animation delay
+                const duration = Math.random() * 2 + 2; // Random animation duration
+                raindrop.style.left = `${x}vw`;
+                raindrop.style.animationDelay = `${delay}s`;
+                raindrop.style.animationDuration = `${duration}s`;
+                rainContainer.appendChild(raindrop);
+            }
+        }
+
+        function drawPoint(x, y, inside) {
+            ctx.beginPath();
+            ctx.arc(x * radius + radius, y * radius + radius, 2, 0, 2 * Math.PI);
+            ctx.fillStyle = inside ? "#8B0000" : "#00008B"; 
+            ctx.globalAlpha = Math.random() * 0.7 + 0.3; // Random opacity for foggy effect
+            ctx.fill();
+        }
+
+        function estimatePi() {
+            for (let i = 0; i < 100; i++) {
+                let x = Math.random() * 2 - 1;
+                let y = Math.random() * 2 - 1;
+
+                totalPoints++;
+                if (x * x + y * y <= 1) {
+                    insideCircle++;
+                    drawPoint(x, y, true); // Points inside the circle
+                } else {
+                    drawPoint(x, y, false); // Points outside the circle
+                }
+            }
+
+            let piEstimate = 4 * insideCircle / totalPoints;
+            document.getElementById('pi-value').innerText = `Estimated Pi: ${piEstimate.toFixed(6)}`;
+        }
+
+        function animate() {
+            estimatePi();
+            requestAnimationFrame(animate); // to Keeps the simulation running
+        }
+
+        // Draw the circle representing the area
+        ctx.beginPath();
+        ctx.arc(radius, radius, radius, 0, 2 * Math.PI);
+        ctx.strokeStyle = '#a0c4ff';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        createRain(); // Start the rain 
+        animate(); // Start the animation loop
+    </script>
+</body>
+</html>
