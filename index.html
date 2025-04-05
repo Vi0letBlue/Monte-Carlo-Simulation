@@ -30,7 +30,6 @@
             text-shadow: 0 0 5px #a0c4ff, 0 0 10px #6272a4;
         }
 
-        /* Pixelated rain effect */
         .rain {
             position: absolute;
             top: 0;
@@ -43,9 +42,9 @@
 
         .rain span {
             position: absolute;
-            width: 2px; /* Pixel-like thin raindrops */
-            height: 20px; /* Length of each raindrop */
-            background: rgba(160, 196, 255, 0.7); /* Light blue color */
+            width: 2px;
+            height: 20px;
+            background: rgba(160, 196, 255, 0.7);
             animation: fall linear infinite;
         }
 
@@ -59,18 +58,15 @@
                 opacity: 0;
             }
         }
-
-        
-
     </style>
 </head>
 <body>
     <div class="rain"></div>
-    <div class="trees"></div>
     <h1> Monte Carlo π Simulation in the Rain 🌧️</h1>
     <canvas id="canvas" width="600" height="600"></canvas>
     <p id="pi-value">Estimated Pi: 0</p>
 
+    <!-- ✅ سكربت هنا بعد ما تجهز العناصر -->
     <script>
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -78,15 +74,14 @@
         let insideCircle = 0;
         let totalPoints = 0;
 
-        // Function to draw rain
         function createRain() {
             const rainContainer = document.querySelector('.rain');
-            const rainCount = 100; // Number of raindrops
+            const rainCount = 100;
             for (let i = 0; i < rainCount; i++) {
                 const raindrop = document.createElement('span');
-                const x = Math.random() * 100; // Random horizontal position
-                const delay = Math.random() * 2; // Random animation delay
-                const duration = Math.random() * 2 + 2; // Random animation duration
+                const x = Math.random() * 100;
+                const delay = Math.random() * 2;
+                const duration = Math.random() * 2 + 2;
                 raindrop.style.left = `${x}vw`;
                 raindrop.style.animationDelay = `${delay}s`;
                 raindrop.style.animationDuration = `${duration}s`;
@@ -97,8 +92,8 @@
         function drawPoint(x, y, inside) {
             ctx.beginPath();
             ctx.arc(x * radius + radius, y * radius + radius, 2, 0, 2 * Math.PI);
-            ctx.fillStyle = inside ? "#8B0000" : "#00008B"; 
-            ctx.globalAlpha = Math.random() * 0.7 + 0.3; // Random opacity for foggy effect
+            ctx.fillStyle = inside ? "#8B0000" : "#00008B";
+            ctx.globalAlpha = Math.random() * 0.7 + 0.3;
             ctx.fill();
         }
 
@@ -110,9 +105,9 @@
                 totalPoints++;
                 if (x * x + y * y <= 1) {
                     insideCircle++;
-                    drawPoint(x, y, true); // Points inside the circle
+                    drawPoint(x, y, true);
                 } else {
-                    drawPoint(x, y, false); // Points outside the circle
+                    drawPoint(x, y, false);
                 }
             }
 
@@ -122,18 +117,18 @@
 
         function animate() {
             estimatePi();
-            requestAnimationFrame(animate); // to Keeps the simulation running
+            requestAnimationFrame(animate);
         }
 
-        // Draw the circle representing the area
+        // Draw the main circle
         ctx.beginPath();
         ctx.arc(radius, radius, radius, 0, 2 * Math.PI);
         ctx.strokeStyle = '#a0c4ff';
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        createRain(); // Start the rain 
-        animate(); // Start the animation loop
+        createRain();
+        animate();
     </script>
 </body>
 </html>
